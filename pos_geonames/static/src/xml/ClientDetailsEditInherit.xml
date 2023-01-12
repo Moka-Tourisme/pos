@@ -2,16 +2,16 @@
 <templates id="template" inherit="point_of_sale.template">
     <t t-inherit="point_of_sale.ClientDetailsEdit" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('client-details-left')]" position="replace">
-            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
             <div class="client-details-left">
                 <div class="client-detail">
                     <span class="label">Country</span>
-                    <select class="detail client-address-country needsclick" name="country_id" t-on-change="captureChange">
+                    <select class="detail client-address-country needsclick" name="country_id"
+                            t-on-change="captureChange">
                         <option value="">None</option>
                         <t t-foreach="env.pos.countries" t-as="country" t-key="country.id">
-                            <option t-att-value="country.id" t-att-selected="props.partner.country_id ? ((country.id === props.partner.country_id[0]) ? true : undefined) : undefined">
-                                <t t-esc="country.name" />
+                            <option t-att-value="country.id"
+                                    t-att-selected="props.partner.country_id ? ((country.id === props.partner.country_id[0]) ? true : undefined) : undefined">
+                                <t t-esc="country.name"/>
                             </option>
                         </t>
                     </select>
@@ -21,29 +21,32 @@
                     <select class="detail client-address-states needsclick" name="state_id" t-on-change="captureChange">
                         <option value="">None</option>
                         <t t-foreach="env.pos.states" t-as="state" t-key="state.id">
-                            <option t-if="props.partner.country_id[0] == state.country_id[0]" t-att-value="state.id" t-att-selected="props.partner.state_id ? ((state.id === props.partner.state_id[0]) ? true : undefined) : undefined">
-                                <t t-esc="state.name" />
+                            <option t-if="props.partner.country_id[0] == state.country_id[0]" t-att-value="state.id"
+                                    t-att-selected="props.partner.state_id ? ((state.id === props.partner.state_id[0]) ? true : undefined) : undefined">
+                                <t t-esc="state.name"/>
                             </option>
                         </t>
                     </select>
                 </div>
                 <div class="client-detail">
                     <span class="label">Street</span>
-                    <input class="detail client-address-street" name="street" t-on-change="captureChange" t-att-value="props.partner.street || ''" placeholder="Street" />
+                    <input class="detail client-address-street" name="street" t-on-change="captureChange"
+                           t-att-value="props.partner.street || ''" placeholder="Street"/>
                 </div>
                 <div class="client-detail">
                     <span class="label">City</span>
-                    <input class="detail client-address-city" name="city" t-on-change="captureChange" t-att-value="props.partner.city || ''" placeholder="City" />
+                    <input class="detail client-address-city" name="city" t-on-change="captureChange"
+                           t-att-value="props.partner.city || ''" placeholder="City"/>
                 </div>
                 <div class="client-detail">
                     <span class="label">Postcode</span>
-                    <input class="detail client-address-zip" name="zip" t-on-change="captureChange" t-att-value="props.partner.zip || ''" placeholder="ZIP" />
+                    <input class="detail client-address-zip" name="zip" t-on-change="captureChange"
+                           t-att-value="props.partner.zip || ''" placeholder="ZIP"/>
                 </div>
-                <div class="client-detail">
-                    <span class="label">Autocomplete</span>
-                    <select class="detail client-address-autocomplete needsclick" name="zip_id" t-on-change="captureChange">
-                        <option value="0">Test</option>
-                        <option value="1">Test2</option>
+                <div class="client-detail geonames-div">
+                    <span class="label">Geonames</span>
+                    <select t-ref="inputAutocomplete" class="detail client-address-autocomplete needsclick" t-on-change="_updateChanges"
+                            name="zip_id">
                     </select>
                 </div>
             </div>

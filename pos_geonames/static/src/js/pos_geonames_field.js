@@ -2,17 +2,25 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
     "use strict";
 
     const PosComponent = require("point_of_sale.PosComponent");
-    const { _t } = require("web.core");
-    const { getDataURLFromFile } = require('web.utils');
     const Registries = require('point_of_sale.Registries');
-    var ClientDetailsEdit = require("point_of_sale.ClientDetailsEdit");
+    const ClientDetailsEdit = require("point_of_sale.ClientDetailsEdit");
+    const {useState, useRef} = owl.hooks;
+    const rpc = require('web.rpc');
 
-    var ClientDetailsEditInherit = (ClientDetailsEdit) => class extends ClientDetailsEdit {
+
+    const ClientDetailsEditInherit = (ClientDetailsEdit) => class extends ClientDetailsEdit {
         constructor() {
             super(...arguments);
-            $(document).ready(function () {
-                $(".client-address-autocomplete").select2();
+            this.inputAutocomplete = useRef('inputAutocomplete');
+        }
+
+        mounted() {
+            this.choices = new Choices(this.inputAutocomplete.el, {
+                allowHTML: true,
+                searchEnabled: true,
+                searchResultLimit: 25
             });
+            this.choices.input.element.addEventListener('keyup', this._updateCountryList.bind(this));
         }
 
         captureChange(event) {
@@ -27,6 +35,70 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
                     }
                 })
             }
+        }
+
+        _updateStatesList(data) {
+            let country_id_before = parseInt(this.changes.country_id);
+            this.changes.country_id = data;
+            this.el.getElementsByClassName("client-address-country")[0].value = data;
+            if (country_id_before !== parseInt(this.changes.country_id)) {
+                $('.client-address-states').empty();
+                $('.client-address-states').append(new Option("None", ""))
+                this.env.pos.states.forEach((state) => {
+                    if (state.country_id[0] === parseInt(this.changes.country_id)) {
+                        $('.client-address-states').append(new Option(state.name, state.id))
+                    }
+                })
+            }
+        }
+
+        /**
+         * @private
+         * @param {KeyBoardEvent} ev
+         */
+        async _updateCountryList(ev) {
+            const self = this;
+            const query = self.choices.input.element.value
+            rpc.query({
+                model: 'res.city.zip',
+                method: 'search_read',
+                kwargs: {
+                    fields: ['id', 'display_name', 'name', 'city_id', 'country_id', 'state_id'],
+                    domain: [
+                        ['display_name', 'ilike', query]
+                    ],
+                    limit: 25
+                }
+            }).then(function (data) {
+                    let countries = [];
+                    _.each(data, function (country) {
+                        countries.push({
+                            value: country.id,
+                            label: country.display_name,
+                            customProperties: {
+                                zip: country.name,
+                                state: country.state_id[0],
+                                country: country.country_id[0],
+                                city: country.city_id[1],
+                            }
+                        })
+                    });
+                    self.choices.setChoices(
+                        countries,
+                        'value',
+                        'label',
+                        true
+                    );
+                }
+            );
+        }
+
+        async _updateChanges() {
+            const data = this.choices.getValue().customProperties;
+            await this._updateStatesList(data.country)
+            this.el.getElementsByClassName("client-address-states")[0].value = data.state;
+            this.el.getElementsByClassName("client-address-city")[0].value = data.city;
+            this.el.getElementsByClassName("client-address-zip")[0].value = data.zip;
         }
     };
 

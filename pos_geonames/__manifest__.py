@@ -9,6 +9,8 @@
     "assets": {
         "point_of_sale.assets": [
             "pos_geonames/static/src/js/*",
+            "pos_geonames/static/lib/choices.js",
+            "pos_geonames/static/lib/choices.css",
         ],
         "web.assets_qweb": [
             "pos_geonames/static/src/xml/*",
@@ -16,8 +18,6 @@
     },
     "depends": [
         "point_of_sale",
-        "base_location_geonames_import",
         "base_location",
-        "website_geonames"
     ],
 }
