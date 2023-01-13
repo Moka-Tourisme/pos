@@ -57,9 +57,8 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
          * @param {KeyBoardEvent} ev
          */
         async _updateCountryList(ev) {
-            const self = this;
-            const query = self.choices.input.element.value
-            rpc.query({
+            const query = this.choices.input.element.value;
+            const data = await rpc.query({
                 model: 'res.city.zip',
                 method: 'search_read',
                 kwargs: {
@@ -69,28 +68,22 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
                     ],
                     limit: 25
                 }
-            }).then(function (data) {
-                    let countries = [];
-                    _.each(data, function (country) {
-                        countries.push({
-                            value: country.id,
-                            label: country.display_name,
-                            customProperties: {
-                                zip: country.name,
-                                state: country.state_id[0],
-                                country: country.country_id[0],
-                                city: country.city_id[1],
-                            }
-                        })
-                    });
-                    self.choices.setChoices(
-                        countries,
-                        'value',
-                        'label',
-                        true
-                    );
+            })
+
+            const countries = data.map((rec) => {
+                return {
+                    value: rec.id,
+                    label: rec.display_name,
+                    customProperties: {
+                        zip: rec.name,
+                        state: rec.state_id[0],
+                        country: rec.country_id[0],
+                        city: rec.city_id[1]
+                    }
                 }
-            );
+            });
+
+            this.choices.setChoices(countries, 'value', 'label', true);
         }
 
         async _updateChanges() {
