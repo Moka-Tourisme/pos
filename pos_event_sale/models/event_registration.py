@@ -2,7 +2,7 @@
 # @author Iván Todorovich <ivan.todorovich@camptocamp.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools import float_is_zero
 
 
@@ -68,6 +68,28 @@ class EventRegistration(models.Model):
                 subtype_id=self.env.ref("mail.mt_note").id,
             )
         return records
+
+    def _update_mail_schedulers(self):
+        """ Update schedulers to set them as running again, and cron to be called
+        as soon as possible. """
+        # Get the open_registrations that are open, and that have not a pos_order_id
+        open_registrations = self.filtered(lambda r: r.state == "open" and not r.pos_order_id)
+
+        if not open_registrations:
+            return
+
+        onsubscribe_schedulers = self.env['event.mail'].sudo().search([
+            ('event_id', 'in', open_registrations.event_id.ids),
+            ('interval_type', '=', 'after_sub')
+        ])
+        if not onsubscribe_schedulers:
+            return
+
+        onsubscribe_schedulers.update({'mail_done': False})
+        # we could simply call _create_missing_mail_registrations and let cron do their job
+        # but it currently leads to several delays. We therefore call execute until
+        # cron triggers are correctly used
+        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
     def action_view_pos_order(self):
         action = self.env["ir.actions.actions"]._for_xml_id(
