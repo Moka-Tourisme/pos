@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Override the event registration template -->
+        <template id="registration_template_inherit" inherit_id="website_event.registration_template">
+            <xpath expr="//div[@id='o_wevent_tickets']//t" position="after">
+                <t t-set="tickets" t-value="tickets.sorted(key=lambda t: t.sequence)"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
+
+
