@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2021 Camptocamp (https://www.camptocamp.com).
+    @author Iván Todorovich <ivan.todorovich@camptocamp.com>
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="pos_config_view_form_inherit" model="ir.ui.view">
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="pos_event_sale.pos_config_view_form"/>
+        <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name=%(event.event_tag_category_action_tree)d]//ancestor::div[hasclass('content-group')]"
+                   position="inside">
+                <div class="mt16">
+                    <field name="iface_event_shop_express"/>
+                    <label for="iface_event_shop_express"/>
+                </div>
+                <div class="mt16" attrs="{'invisible': [('iface_event_shop_express', '=', False)]}">
+                    <label
+                            class="o_light_label"
+                            for="iface_time_before_event"
+                            string="Use express shop "
+                    />
+                    <field
+                            name="iface_time_before_event"
+                            nolabel="1"
+                            class="col-1 text-center oe_inline"
+                    />
+                    <label
+                            class="o_light_label"
+                            for="iface_event_load_days_before"
+                            string=" minute(s) before the event"
+                    />
+                </div>
+                <div class="mt16" attrs="{'invisible': [('iface_event_shop_express', '=', False)]}">
+                    <field name="iface_automatically_confirmed"/>
+                    <label for="iface_automatically_confirmed"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
