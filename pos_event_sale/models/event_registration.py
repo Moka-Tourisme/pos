@@ -70,32 +70,24 @@ class EventRegistration(models.Model):
         return records
 
     def _update_mail_schedulers(self):
-        # OVERRIDE to handle sessions' mail scheduler
-        session_records = self.filtered(lambda r: r.session_id and not r.pos_order_id)
-        regular_records = self - session_records
-        regular_records = regular_records.filtered(lambda r: not r.pos_order_id)
-        res = super(EventRegistration, regular_records)._update_mail_schedulers()
-        # Similar to super, only we find the schedulers linked to the session
-        open_registrations = session_records.filtered(lambda r: r.state == "open")
+        """ Update schedulers to set them as running again, and cron to be called
+               as soon as possible. """
+        open_registrations = self.filtered(lambda registration: registration.state == 'open' and not registration.pos_order_id)
         if not open_registrations:
-            return res
-        onsubscribe_schedulers = (
-            self.env["event.mail.session"]
-            .sudo()
-            .search(
-                [
-                    ("session_id", "in", open_registrations.session_id.ids),
-                    ("interval_type", "=", "after_sub"),
-                ]
-            )
-        )
+            return
 
+        onsubscribe_schedulers = self.env['event.mail'].sudo().search([
+            ('event_id', 'in', open_registrations.event_id.ids),
+            ('interval_type', '=', 'after_sub')
+        ])
         if not onsubscribe_schedulers:
-            return res
+            return
 
-        onsubscribe_schedulers.mail_done = False
+        onsubscribe_schedulers.update({'mail_done': False})
+        # we could simply call _create_missing_mail_registrations and let cron do their job
+        # but it currently leads to several delays. We therefore call execute until
+        # cron triggers are correctly used
         onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
-        return res
 
     def action_view_pos_order(self):
         action = self.env["ir.actions.actions"]._for_xml_id(
