@@ -1,0 +1,12 @@
+.multiprint-flex {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+div.change_line{
+    padding: 20px 0;
+}
+
+div.change_line:not(.first){
+    border-top: 1px solid #555555;
+}

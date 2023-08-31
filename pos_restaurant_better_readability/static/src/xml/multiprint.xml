@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderChangeReceipt" t-inherit="pos_restaurant.OrderChangeReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach='changes.new']" position="replace">
+            <t t-foreach="changes.new" t-as="change">
+                <div t-attf-class="change_line #{ change_first and 'first' or ''}">
+                    <div t-attf-class="multiprint-flex">
+                        <t t-esc="change.qty"/>
+                        <span t-esc="change.name_wrapped[0]"/>
+                    </div>
+                    <t t-call="NameWrapped"/>
+                    <t t-if="change.note">
+                    <div>
+                    NOTE
+                        <span class="pos-receipt-right-align">...</span>
+                    </div>
+                        <div><span class="pos-receipt-left-padding">--- <t t-esc="change.note"/></span></div>
+                        <br/>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
