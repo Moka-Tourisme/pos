@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="NumberTicketsSelector" owl="1">
+        <div class="numberTickets">
+            <span class="minus-icon btn"><i class="fa fa-minus minus-icon-booking"/></span>
+            <input class="numberTicketsInput"/>
+            <span class="plus-icon btn"><i class="fa fa-plus plus-icon-booking"/></span>
+        </div>
+    </t>
+</templates>

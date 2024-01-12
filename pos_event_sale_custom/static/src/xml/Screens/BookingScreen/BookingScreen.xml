@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="BookingScreen" owl="1">
+        <div class="ticket-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div class="screen-full-width">
+                <div class="rightpane pane-border">
+                    <div class="controls">
+                        <t t-if="!env.isMobile || !state.showSearchBar">
+                            <div class="buttons">
+                                <button class="discard" t-on-click="() => this.trigger('close-screen')">
+                                    <span class="search-icon">
+                                        <i class="fa fa-angle-double-left"/>
+                                    </span>
+                                    <t t-if="!env.isMobile">
+                                        Back
+                                    </t>
+                                </button>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="booking">
+                        <EventSelector/>
+                    </div>
+                </div>
+                <div class="leftpane">
+<!--                    <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />-->
+                    <!--                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />-->
+                    <OrderWidget ticketing="true"/>
+                    <div class="pads">
+                        <div class="subpads">
+                            <ActionpadWidget partner="partner" actionName="constructor.numpadActionName"
+                                             actionToTrigger="'click-backToOrder'"/>
+                            <NumpadWidget activeMode="env.pos.numpadMode"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

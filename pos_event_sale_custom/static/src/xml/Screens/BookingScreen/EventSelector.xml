@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="EventSelector" owl="1">
+        <div class="row rowEventBooking">
+            <div class="col-6 calendarContainer">
+                <EventCalendar eventsByDate="eventsByDate"/>
+            </div>
+            <div class="col-6 eventContainer">
+                <EventList events="eventsToDisplay"/>
+            </div>
+            <div class="Tickets col-12">
+                <EventTicketList eventTickets="eventTicketsToDisplay"/>
+            </div>
+        </div>
+
+    </t>
+</templates>

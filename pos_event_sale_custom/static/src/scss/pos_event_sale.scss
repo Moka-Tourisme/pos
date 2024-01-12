@@ -1,0 +1,81 @@
+/*
+Copyright 2021 Camptocamp SA (https://www.camptocamp.com).
+@author Iván Todorovich <ivan.todorovich@camptocamp.com>
+License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+*/
+
+$pos-event-sale-primary-color: #6ec89b !default;
+
+.numberTickets {
+	background-color: #434343;
+	min-height: 10vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.numberTicketsInput {
+		margin: 0 1vw 0 1vw;
+	}
+
+	.btn {
+		background-color: #6ec89b;
+		border: none !important;
+		color: #fff;
+		border-radius: 10%;
+
+		i {
+			margin: 0.4vw;
+		}
+	}
+}
+
+.rowEventBooking {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	.col-3 {
+		width: 25%;
+	}
+	.col-4 {
+		width: 33.33%;
+	}
+	.col-6 {
+		width: 50%;
+	}
+	.col-12{
+		width: 100%;
+	}
+
+	.h-70 {
+		height: 70vh;
+	}
+
+	.calendarContainer {
+		background-color: #666666;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		height: 65dvh;
+	}
+
+	.eventContainer {
+		background-color: #999999;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		height: 65dvh;
+	}
+}
+
+.Tickets{
+	background-color: #CCCCCC;
+	min-height: 10vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 1dvh;
+}
