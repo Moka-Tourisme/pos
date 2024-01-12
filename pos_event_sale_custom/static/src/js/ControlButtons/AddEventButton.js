@@ -10,6 +10,7 @@ odoo.define("pos_event_sale_custom.AddEventButton", function (require) {
                 await this.showScreen("BookingScreen", {
                     ui: {filter: 'SYNCED'},
                     order: this.env.pos.get_order(),
+                    ticketing: true,
                 });
             }
         };

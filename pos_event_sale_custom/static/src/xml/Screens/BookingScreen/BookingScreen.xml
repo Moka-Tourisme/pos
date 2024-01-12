@@ -25,13 +25,14 @@
                 </div>
                 <div class="leftpane">
 <!--                    <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />-->
-                    <!--                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />-->
-                    <OrderWidget ticketing="true"/>
+<!--                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />-->
+                    <OrderWidget/>
+<!--                    <OrderDetails order="_selectedSyncedOrder" selectedOrderlineId="_selectedOrderlineId" ticketing="true"/>-->
                     <div class="pads">
                         <div class="subpads">
-                            <ActionpadWidget partner="partner" actionName="constructor.numpadActionName"
-                                             actionToTrigger="'click-backToOrder'"/>
-                            <NumpadWidget activeMode="env.pos.numpadMode"/>
+                            <ActionpadWidget partner="partner" actionName="constructor.numpadActionName"/>
+                            <NumpadWidget disabledModes="['price', 'discount']" activeMode="'quantity'"
+                                          disableSign="true"/>
                         </div>
                     </div>
                 </div>

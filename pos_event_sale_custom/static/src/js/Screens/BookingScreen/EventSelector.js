@@ -219,6 +219,8 @@ odoo.define("pos_event_sale_custom.EventSelector", function (require) {
          */
         async clickEvent(ev) {
             console.log("ICI click event")
+            console.log(ev)
+            console.log(this.props.event)
             const {event} = ev.detail;
             this.state.selectedEvent = event;
         }
