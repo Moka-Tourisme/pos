@@ -19,5 +19,6 @@
     "depends": [
         "point_of_sale",
         "base_location",
+        "base_location_geonames_import" 
     ],
 }

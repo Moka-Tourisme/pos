@@ -6,8 +6,6 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
     const ClientDetailsEdit = require("point_of_sale.ClientDetailsEdit");
     const {useState, useRef} = owl.hooks;
     const rpc = require('web.rpc');
-
-
     const ClientDetailsEditInherit = (ClientDetailsEdit) => class extends ClientDetailsEdit {
         constructor() {
             super(...arguments);
@@ -21,6 +19,7 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
                 searchResultLimit: 25
             });
             this.choices.input.element.addEventListener('keyup', this._updateCountryList.bind(this));
+            super.mounted();
         }
 
         captureChange(event) {
@@ -91,7 +90,11 @@ odoo.define("pos_geonames_field.ClientDetailsEditInherit", function (require) {
             await this._updateStatesList(data.country)
             this.el.getElementsByClassName("client-address-states")[0].value = data.state;
             this.el.getElementsByClassName("client-address-city")[0].value = data.city;
+            this.el.getElementsByClassName("client-address-country")[0].value = data.country;
             this.el.getElementsByClassName("client-address-zip")[0].value = data.zip;
+            this.changes.state_id = data.state;
+            this.changes.city = data.city;
+            this.changes.zip = data.zip;
         }
     };
 
