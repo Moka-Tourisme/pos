@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="pos_event_sale.EventRegistrationReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('event-info')]" position="inside">
+            <div t-if="receipt.client" class="pos-receipt-client-name">
+                <b><i class="fa fa-user"/></b>
+                <t t-esc="receipt.client.name"/>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
