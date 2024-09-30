@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" name="button_box" position="inside">
+                <button type="object" class="oe_stat_button" icon="fa-usd"
+                        name="action_view_pos_order_dues"
+                        context="{
+                            'search_default_unpaid': 1,
+                            'default_partner_id': active_id,
+                        }"
+                >
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_residual" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Dues</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

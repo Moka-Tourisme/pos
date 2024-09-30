@@ -1,0 +1,372 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_settle_customer_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-30 11:07+0000\n"
+"PO-Revision-Date: 2024-09-30 13:08+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.5\n"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_partner_form
+msgid "<span class=\"o_stat_text\">Dues</span>"
+msgstr "<span class=\"o_stat_text\">Dus</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Montant</span>\n"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Prix Total</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid ""
+"<span>\n"
+"                                    Order Details\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    Détails de la commande\n"
+"                                </span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Date Order</span>"
+msgstr "<span>Date de la commande</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<span>Description</span>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<span>Disc.%</span>"
+msgstr "<span>Rem.%</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Point Of Sale</span>"
+msgstr "<span>Point de vente</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Price Unit</span>"
+msgstr "<span>Prix unitaire</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Product</span>"
+msgstr "<span>Produit</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<span>Quantity</span>"
+msgstr "<span>Quantité</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Reference</span>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Regularisation</span>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<span>Taxes</span>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Total</span>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<span>Unit Price</span>"
+msgstr "<span>Prix unitaire</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "<span>Vendor</span>"
+msgstr "<span>Vendeur</span>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Total</strong>"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid ""
+"<strong class=\"text-center\">Scan me with your banking app.</strong>\n"
+"                                <br/>\n"
+"                                <br/>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Customer Code:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Date:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Due Date:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Invoice Date:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Receipt Date:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Reference:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Shipping Address:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "<strong>Source:</strong>"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Amount Due"
+msgstr "Montant Du"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Cancelled Invoice"
+msgstr "Facture annulée"
+
+#. module: pos_settle_customer_account
+#: model:ir.model,name:pos_settle_customer_account.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.actions.server,name:pos_settle_customer_account.action_create_due_invoice
+msgid "Create Due Invoice"
+msgstr "Créer une facture de régularisation"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Credit Note"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:product.template,name:pos_settle_customer_account.product_settle_customer_account_product_template
+msgid "Customer Account"
+msgstr "Compte client"
+
+#. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Customer Invoices"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "Customer account order:"
+msgstr "Commandes du compte client"
+
+#. module: pos_settle_customer_account
+#: model:ir.ui.menu,name:pos_settle_customer_account.menu_pos_client_accounts
+msgid "Customer accounts"
+msgstr "Comptes client"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
+msgid "Date"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Discount"
+msgstr "Remise"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Draft Invoice"
+msgstr "Facture en brouillon"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Due Date"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.actions.report,name:pos_settle_customer_account.action_generate_regularisation
+msgid "Generate Regularisation"
+msgstr "Générer le document de régularisation"
+
+#. module: pos_settle_customer_account
+#: model:ir.model.fields,field_description:pos_settle_customer_account.field_pos_order__has_account_move
+msgid "Has Account Move"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
+msgid "Montant Total"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.actions.act_window,help:pos_settle_customer_account.action_pos_pos_order_form
+msgid "No orders found"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.actions.act_window,name:pos_settle_customer_account.action_pos_pos_order_form
+msgid "Orders"
+msgstr "Commandes"
+
+#. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Orders of month: %s"
+msgstr "Commandes du mois de: %s"
+
+#. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Orders of months: %s"
+msgstr "Commandes des mois de: %s"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_pos_order_filter
+msgid "Paid"
+msgstr "Payé"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid ""
+"Paid\n"
+"                                                            on"
+msgstr ""
+"Payé\n"
+"                                                            le"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Paid on"
+msgstr "Payé avec"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Please use the following communication for your payment :"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.model,name:pos_settle_customer_account.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Commandes du point de vente"
+
+#. module: pos_settle_customer_account
+#: model:ir.model.fields,field_description:pos_settle_customer_account.field_res_partner__amount_residual
+#: model:ir.model.fields,field_description:pos_settle_customer_account.field_res_users__amount_residual
+msgid "Residual Amount"
+msgstr "Montant restant"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
+msgid "Référence de la commande"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Tax ID"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.actions.act_window,help:pos_settle_customer_account.action_pos_pos_order_form
+msgid "To record new orders, start a new session."
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.model.fields,help:pos_settle_customer_account.field_res_partner__amount_residual
+#: model:ir.model.fields,help:pos_settle_customer_account.field_res_users__amount_residual
+msgid "Total residual amount of the customer."
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_pos_order_filter
+msgid "Unpaid"
+msgstr "Non payés"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_document_regularisation
+msgid "by"
+msgstr "par"
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
+msgid "if paid before"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
+msgid "État de compte pour"
+msgstr ""

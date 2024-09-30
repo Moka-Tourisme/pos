@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_pos_pos_order_form" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_mode">tree,form,kanban,pivot</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain">[
+            ('payment_ids.payment_method_id.split_transactions', '=', True),
+            ('payment_ids.payment_method_id.journal_id', '=', False),
+            ('state', 'in',['done', 'invoiced']),
+            ('amount_total', '>', 0),
+            ('partner_id', '!=', False)
+            ]
+        </field>
+        <field name="context">
+            {
+            'group_by': ['partner_id'],
+            'search_default_unpaid': 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No orders found
+            </p>
+            <p>
+                To record new orders, start a new session.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.filter</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <filter string="Unpaid" name="unpaid" domain="[('has_account_move', '=', False)]"/>
+                <filter string="Paid" name="paid" domain="[('has_account_move', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_create_due_invoice" model="ir.actions.server">
+        <field name="name">Create Due Invoice</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="pos_settle_customer_account.model_pos_order"/>
+        <field name="binding_model_id" ref="pos_settle_customer_account.model_pos_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.create_due_invoice()
+        </field>
+    </record>
+
+    <record id="action_generate_regularisation" model="ir.actions.report">
+        <field name="name">Generate Regularisation</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_settle_customer_account.report_pos_order_regularisation</field>
+        <field name="report_file">pos_settle_customer_account.report_pos_order_regularisation</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+
+    <record id="paperformat_euro_no_margin" model="report.paperformat">
+        <field name="name">European A4 without borders</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
+
+</odoo>
