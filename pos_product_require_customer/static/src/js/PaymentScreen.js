@@ -18,7 +18,7 @@ odoo.define("pos_product_require_customer.PaymentScreen", function (require) {
             async _isOrderValid() {
                 const hasCustomerRequiredProduct = this.hasCustomerRequiredProduct();
                 console.log('hasCustomerRequiredProduct', hasCustomerRequiredProduct);
-                if (hasCustomerRequiredProduct) {
+                if (hasCustomerRequiredProduct && !this.env.pos.get_order().get_partner()) {
                     this.showPopup("ErrorPopup", {
                         title: this.env._t("Customer Required"),
                         body: this.env._t("Please add a customer to the order before proceeding."),
