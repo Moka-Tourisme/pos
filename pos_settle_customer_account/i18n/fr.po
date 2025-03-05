@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-30 11:07+0000\n"
-"PO-Revision-Date: 2024-09-30 13:08+0200\n"
+"POT-Creation-Date: 2025-03-05 13:31+0000\n"
+"PO-Revision-Date: 2025-03-05 14:33+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -15,7 +15,63 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#. module: pos_settle_customer_account
+#: model:mail.template,body_html:pos_settle_customer_account.email_template_edi_invoice
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear\n"
+"                        <t t-if=\"object.partner_id.parent_id\">\n"
+"                            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"                            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                        Here is your\n"
+"                        <t t-if=\"object.name\">\n"
+"                            invoice\n"
+"                            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            invoice\n"
+"                        </t>\n"
+"                        <t t-if=\"object.invoice_origin\">\n"
+"                            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"                        </t>\n"
+"                        amounting in\n"
+"                        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00\n"
+"                        </span>\n"
+"                        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"                        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"                            This invoice is already paid.\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Please remit payment at your earliest convenience.\n"
+"                            <t t-if=\"object.payment_reference\">\n"
+"                                <br>\n"
+"                                <br>\n"
+"                                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">\n"
+"                                INV/2021/05/0005</span>.\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                        Do not hesitate to contact us if you have any questions.\n"
+"                        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"                            <br>\n"
+"                            <br>\n"
+"                            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin\n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
 
 #. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_partner_form
@@ -185,6 +241,13 @@ msgid "Cancelled Invoice"
 msgstr "Facture annulée"
 
 #. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Commande du %s"
+msgstr ""
+
+#. module: pos_settle_customer_account
 #: model:ir.model,name:pos_settle_customer_account.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -203,6 +266,13 @@ msgstr ""
 #: model:product.template,name:pos_settle_customer_account.product_settle_customer_account_product_template
 msgid "Customer Account"
 msgstr "Compte client"
+
+#. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Customer Invoice"
+msgstr ""
 
 #. module: pos_settle_customer_account
 #. odoo-python
@@ -257,6 +327,20 @@ msgid "Invoice"
 msgstr "Facture"
 
 #. module: pos_settle_customer_account
+#: model:mail.template,name:pos_settle_customer_account.email_template_edi_invoice
+msgid "Invoice Customer Account: Sending"
+msgstr "Facture des comptes clients: Envoi"
+
+#. module: pos_settle_customer_account
+#: model:mail.template,report_name:pos_settle_customer_account.email_template_edi_invoice
+msgid ""
+"Invoice_{{ (object.name or '').replace('/','_') }}\n"
+"            "
+msgstr ""
+"Facture_{{ (object.name or '').replace('/','_') }}\n"
+"            "
+
+#. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
 msgid "Montant Total"
 msgstr ""
@@ -305,6 +389,13 @@ msgid "Paid on"
 msgstr "Payé avec"
 
 #. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Please provide a partner for the sale."
+msgstr ""
+
+#. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
 msgid "Please use the following communication for your payment :"
 msgstr ""
@@ -315,6 +406,13 @@ msgid "Point of Sale Orders"
 msgstr "Commandes du point de vente"
 
 #. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Price discount from %s -> %s"
+msgstr ""
+
+#. module: pos_settle_customer_account
 #: model:ir.model.fields,field_description:pos_settle_customer_account.field_res_partner__amount_residual
 #: model:ir.model.fields,field_description:pos_settle_customer_account.field_res_users__amount_residual
 msgid "Residual Amount"
@@ -323,6 +421,11 @@ msgstr "Montant restant"
 #. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
 msgid "Référence de la commande"
+msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:mail.template,description:pos_settle_customer_account.email_template_edi_invoice
+msgid "Sent to customers with their invoices in attachment"
 msgstr ""
 
 #. module: pos_settle_customer_account
@@ -365,6 +468,11 @@ msgstr "par"
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_invoice_document_regularisation
 msgid "if paid before"
 msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:mail.template,subject:pos_settle_customer_account.email_template_edi_invoice
+msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Facture (Ref {{ object.name or 'n/a' }})"
 
 #. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
