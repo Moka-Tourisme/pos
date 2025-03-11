@@ -8,7 +8,7 @@
     'category': 'Point of Sale/Accounting',
     "author": "Moka",
     "website": "https://www.mokatourisme.fr",
-    'depends': ['point_of_sale', 'account', 'uom', 'product', 'website_sale'],
+    'depends': ['point_of_sale', 'account', 'uom', 'product', 'website_sale', 'account_reconcile_oca'],
     'data': [
         'report/report_pos_client_statement.xml',
         'data/product_data.xml',

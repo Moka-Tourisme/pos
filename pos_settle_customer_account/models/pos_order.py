@@ -1,4 +1,5 @@
 from odoo import models, api, fields, _
+from collections import defaultdict
 import pytz
 
 
@@ -56,7 +57,6 @@ class PosOrder(models.Model):
                     orders_by_partner[order.partner_id] |= order
         # Create an invoice for each partner
         for partner, orders in orders_by_partner.items():
-            print(partner, orders)
             orders.action_pos_order_invoice_multi(partner)
 
         return {
@@ -74,33 +74,71 @@ class PosOrder(models.Model):
                 order._create_order_picking()
         return self._generate_pos_order_invoice_multi(partner)
 
+    def _create_misc_reversal_move(self, payment_moves, **kwargs):
+        """ Create a misc move to reverse this POS order and "remove" it from the POS closing entry.
+        This is done by taking data from the order and using it to somewhat replicate the resulting entry in order to
+        reverse partially the movements done ine the POS closing entry.
+        """
+        aml_values_list_per_nature = self._prepare_aml_values_list_per_nature()
+        move_lines = []
+        for aml_values_list in aml_values_list_per_nature.values():
+            for aml_values in aml_values_list:
+                aml_values['balance'] = -aml_values['balance']
+                aml_values['amount_currency'] = -aml_values['amount_currency']
+                move_lines.append(aml_values)
+
+        # Make a move with all the lines.
+        reversal_entry = self.env['account.move'].with_context(
+            default_journal_id=self.config_id.journal_id.id,
+            skip_invoice_sync=True,
+            skip_invoice_line_sync=True,
+        ).create({
+            'journal_id': self.config_id.journal_id.id,
+            'date': fields.Date.context_today(self),
+            'ref': _('Reversal of POS closing entry %s for order %s from session %s', self.session_move_id.name,
+                     self.name, self.session_id.name),
+            'invoice_line_ids': [(0, 0, aml_value) for aml_value in move_lines],
+        })
+        reversal_entry.action_post()
+
+        pos_account_receivable = self.company_id.account_default_pos_receivable_account_id
+        account_receivable = self.payment_ids.payment_method_id.receivable_account_id
+        reversal_entry_receivable = reversal_entry.line_ids.filtered(
+            lambda l: l.account_id in (pos_account_receivable + account_receivable))
+        payment_receivable = payment_moves.line_ids.filtered(
+            lambda l: l.account_id in (pos_account_receivable + account_receivable))
+
+        # customer_account_lines = reversal_entry.line_ids.filtered(lambda l: l.account_id.code.startswith('411'))
+        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
+        for line in (reversal_entry_receivable | payment_receivable):
+            lines_to_reconcile[line.account_id] |= line
+        if kwargs.get("to_reconcile"):
+            customer_account_reconcile = self.session_move_id.line_ids.filtered(
+                lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id) + reversal_entry.line_ids.filtered(
+                lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id)
+            customer_account_reconcile.reconcile()
+        for line in lines_to_reconcile.values():
+            line.filtered(lambda l: not l.reconciled).reconcile()
+
     def _generate_pos_order_invoice_multi(self, partner):
         moves = self.env['account.move']
         move_vals = self._prepare_invoice_vals_settle(orders=self, partner=partner)
-        print("move_vals: ", move_vals)
         new_move = self.env['account.move'].create(move_vals)
         new_move.sudo().with_context(skip_invoice_sync=True)._post()
         for order in self:
-            print("=== Order: ===", order)
             # Force company for all SUPERUSER_ID action
-            print("=== Order avant if: ===", order)
             if order.account_move:
-                print("=== Order.account_move: ===", order.account_move)
                 moves += order.account_move
                 continue
-            print("=== Order après if: ===", order)
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             moves += new_move
             payment_moves = order._apply_invoice_payments(order.session_id.state == 'closed')
-            print("=== ICI avant le if ===")
             if order.session_id.state == 'closed':  # If the session isn't closed this isn't needed.
                 # If a client requires the invoice later, we need to revers the amount from the closing entry, by making a new entry for that.
-                print("=== ICI dans le if ===")
-                order._create_misc_reversal_move(payment_moves)
-                print("=== ICI après le if ===")
+                reversal_move = order._create_misc_reversal_move(payment_moves, to_reconcile=True)
 
         if not moves:
             return {}
