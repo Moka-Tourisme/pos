@@ -57,7 +57,9 @@ class PosOrder(models.Model):
                     orders_by_partner[order.partner_id] |= order
         # Create an invoice for each partner
         for partner, orders in orders_by_partner.items():
-            orders.action_pos_order_invoice_multi(partner)
+            data = orders.action_pos_order_invoice_multi(partner)
+        #     Filter out the invoices that were just created and unique
+            invoice_ids += [inv.id for inv in data if inv not in invoice_ids]
 
         return {
             'name': _('Customer Invoices'),
@@ -79,6 +81,8 @@ class PosOrder(models.Model):
         This is done by taking data from the order and using it to somewhat replicate the resulting entry in order to
         reverse partially the movements done ine the POS closing entry.
         """
+        print("=== payment_moves ===", payment_moves)
+        print("=== payment_moves.line_ids ===", payment_moves.line_ids)
         aml_values_list_per_nature = self._prepare_aml_values_list_per_nature()
         move_lines = []
         for aml_values_list in aml_values_list_per_nature.values():
@@ -86,7 +90,7 @@ class PosOrder(models.Model):
                 aml_values['balance'] = -aml_values['balance']
                 aml_values['amount_currency'] = -aml_values['amount_currency']
                 move_lines.append(aml_values)
-
+        print("=== move_lines ===", move_lines)
         # Make a move with all the lines.
         reversal_entry = self.env['account.move'].with_context(
             default_journal_id=self.config_id.journal_id.id,
@@ -113,9 +117,10 @@ class PosOrder(models.Model):
         for line in (reversal_entry_receivable | payment_receivable):
             lines_to_reconcile[line.account_id] |= line
         if kwargs.get("to_reconcile"):
-            customer_account_reconcile = self.session_move_id.line_ids.filtered(
-                lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id) + reversal_entry.line_ids.filtered(
+            reversal_line_to_reconcile = reversal_entry.line_ids.filtered(
                 lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id)
+            customer_account_reconcile = self.session_move_id.line_ids.filtered(
+                lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id and l.balance == -reversal_line_to_reconcile[0].balance) + reversal_line_to_reconcile
             customer_account_reconcile.reconcile()
         for line in lines_to_reconcile.values():
             line.filtered(lambda l: not l.reconciled).reconcile()
@@ -142,18 +147,7 @@ class PosOrder(models.Model):
 
         if not moves:
             return {}
-
-        return {
-            'name': _('Customer Invoice'),
-            'view_mode': 'form',
-            'view_id': self.env.ref('account.view_move_form').id,
-            'res_model': 'account.move',
-            'context': "{'move_type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': moves and moves.ids[0] or False,
-        }
+        return moves
 
     def prepare_invoice_lines_settle(self, orders):
         invoice_lines = []
