@@ -16,7 +16,7 @@ class PosSession(models.Model):
 
     def _loader_params_product_template(self):
         result = super()._loader_params_product_template()
-        result["search_params"]["fields"].append("pack_ok")
+        result["search_params"]["fields"].extend(["pack_ok", "pack_type", "pack_component_price"])
         return result
 
     def _pos_ui_models_to_load(self):

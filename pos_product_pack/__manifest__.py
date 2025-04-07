@@ -6,7 +6,7 @@
     "name": "Pos Product Pack",
     "summary": """
         Allows to sell product packs on POS sessions""",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.0.2",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA), Moka",
     "maintainers": ["rousseldenis"],

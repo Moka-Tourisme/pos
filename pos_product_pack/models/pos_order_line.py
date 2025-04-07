@@ -8,4 +8,10 @@ class PosOrderLine(models.Model):
 
     pack_line_id = fields.Many2one(
         comodel_name="product.pack.line",
+        string="Pack Line",
+    )
+    is_pack_component = fields.Boolean(
+        string="Is Pack Component",
+        default=False,
+        help="Indicates if this line is a component of a product pack",
     )
