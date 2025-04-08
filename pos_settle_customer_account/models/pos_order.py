@@ -121,7 +121,7 @@ class PosOrder(models.Model):
                 lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id)
             customer_account_reconcile = self.session_move_id.line_ids.filtered(
                 lambda l: l.account_id == l.partner_id.property_account_receivable_id and l.partner_id == self.partner_id and l.balance == -reversal_line_to_reconcile[0].balance) + reversal_line_to_reconcile
-            customer_account_reconcile.reconcile()
+            customer_account_reconcile.filtered(lambda l: not l.reconciled).reconcile()
         for line in lines_to_reconcile.values():
             line.filtered(lambda l: not l.reconciled).reconcile()
 
