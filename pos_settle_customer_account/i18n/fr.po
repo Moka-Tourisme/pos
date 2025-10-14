@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 13:31+0000\n"
-"PO-Revision-Date: 2025-03-05 14:33+0100\n"
+"POT-Creation-Date: 2025-10-14 12:39+0000\n"
+"PO-Revision-Date: 2025-10-14 14:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -72,6 +72,56 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Cher(e)\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br>\n"
+"        <br>\n"
+"        Voici votre\n"
+"        <t t-if=\"object.name\">\n"
+"            facture\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            facture\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (avec référence : <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        d'un montant de\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00\n"
+"        </span>\n"
+"        de la part de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Cette facture est déjà payée.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Veuillez effectuer le paiement dans les meilleurs délais.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br>\n"
+"                <br>\n"
+"                Veuillez utiliser la communication suivante pour votre paiement : <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">\n"
+"                INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br>\n"
+"        <br>\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br>\n"
+"            <br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin\n"
+"            </t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_partner_form
@@ -271,13 +321,6 @@ msgstr "Compte client"
 #. odoo-python
 #: code:addons/pos_settle_customer_account/models/pos_order.py:0
 #, python-format
-msgid "Customer Invoice"
-msgstr ""
-
-#. module: pos_settle_customer_account
-#. odoo-python
-#: code:addons/pos_settle_customer_account/models/pos_order.py:0
-#, python-format
 msgid "Customer Invoices"
 msgstr ""
 
@@ -356,20 +399,6 @@ msgid "Orders"
 msgstr "Commandes"
 
 #. module: pos_settle_customer_account
-#. odoo-python
-#: code:addons/pos_settle_customer_account/models/pos_order.py:0
-#, python-format
-msgid "Orders of month: %s"
-msgstr "Commandes du mois de: %s"
-
-#. module: pos_settle_customer_account
-#. odoo-python
-#: code:addons/pos_settle_customer_account/models/pos_order.py:0
-#, python-format
-msgid "Orders of months: %s"
-msgstr "Commandes des mois de: %s"
-
-#. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.view_pos_order_filter
 msgid "Paid"
 msgstr "Payé"
@@ -419,9 +448,21 @@ msgid "Residual Amount"
 msgstr "Montant restant"
 
 #. module: pos_settle_customer_account
+#. odoo-python
+#: code:addons/pos_settle_customer_account/models/pos_order.py:0
+#, python-format
+msgid "Reversal of POS closing entry %s for order %s from session %s"
+msgstr ""
+
+#. module: pos_settle_customer_account
 #: model_terms:ir.ui.view,arch_db:pos_settle_customer_account.report_pos_client_statement
 msgid "Référence de la commande"
 msgstr ""
+
+#. module: pos_settle_customer_account
+#: model:ir.actions.report,print_report_name:pos_settle_customer_account.action_generate_regularisation
+msgid "Régularisation des commandes"
+msgstr "'Régularisation des commandes'"
 
 #. module: pos_settle_customer_account
 #: model:mail.template,description:pos_settle_customer_account.email_template_edi_invoice
