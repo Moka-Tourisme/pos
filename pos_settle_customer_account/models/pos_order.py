@@ -1,6 +1,7 @@
 from odoo import models, api, fields, _
 from collections import defaultdict
 import pytz
+from odoo.tools import float_compare, float_round, float_repr
 
 
 class PosOrder(models.Model):
