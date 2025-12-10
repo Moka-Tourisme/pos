@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_pos_order_tree_customer_account" model="ir.ui.view">
+        <field name="name">pos.order.tree.customer.account</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="create_due_invoice" string="Create Due Invoice" type="object" class="oe_highlight"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_pos_pos_order_form" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
         <field name="view_mode">tree,form,kanban,pivot</field>
-        <field name="view_id" eval="False"/>
+        <field name="view_id" ref="view_pos_order_tree_customer_account"/>
         <field name="domain">[
             ('payment_ids.payment_method_id.split_transactions', '=', True),
             ('payment_ids.payment_method_id.journal_id', '=', False),
@@ -39,18 +53,6 @@
                 <filter string="Unpaid" name="unpaid" domain="[('has_account_move', '=', False)]"/>
                 <filter string="Paid" name="paid" domain="[('has_account_move', '=', True)]"/>
             </search>
-        </field>
-    </record>
-
-    <record id="action_create_due_invoice" model="ir.actions.server">
-        <field name="name">Create Due Invoice</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="pos_settle_customer_account.model_pos_order"/>
-        <field name="binding_model_id" ref="pos_settle_customer_account.model_pos_order"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">
-            action = records.create_due_invoice()
         </field>
     </record>
 

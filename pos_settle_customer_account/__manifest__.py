@@ -18,6 +18,11 @@
         'views/res_partner_view.xml',
         'data/invoice_mail_template.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'pos_settle_customer_account/static/src/css/pos_settle_customer_account.css',
+        ],
+    },
     'installable': True,
     'auto_install': False,
     'license': 'AGPL-3',
