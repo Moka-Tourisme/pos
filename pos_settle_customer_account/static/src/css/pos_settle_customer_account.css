@@ -1,0 +1,13 @@
+/* Force primary button style in tree view header */
+.o_list_view .o_control_panel button[name="create_due_invoice"],
+.o_list_view header button[name="create_due_invoice"] {
+    background-color: #66598f !important;
+    border-color: #66598f !important;
+    color: white !important;
+}
+
+.o_list_view .o_control_panel button[name="create_due_invoice"]:hover,
+.o_list_view header button[name="create_due_invoice"]:hover {
+    background-color: #66598f !important;
+    border-color: #66598f !important;
+}

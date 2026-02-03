@@ -1,0 +1,30 @@
+# Copyright 2024 Moka - Horvat Damien
+# Copyright 2024 Moka - Duciell Romain
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+{
+    'name': 'POS Settle Customer Account',
+    'summary': 'Invoice customer accounts and generate sales statements and collective invoices',
+    'version': '18.0.0.0.1',
+    'category': 'Point of Sale/Accounting',
+    "author": "Moka",
+    "website": "https://www.mokatourisme.fr",
+    'depends': ['point_of_sale', 'account', 'uom', 'product', 'website_sale'],
+    'data': [
+        'report/report_pos_client_statement.xml',
+        'data/product_data.xml',
+        'views/report_invoice.xml',
+        'views/pos_order_view.xml',
+        'views/pos_config_view.xml',
+        'views/res_partner_view.xml',
+        'views/account_move_view.xml',
+        'data/invoice_mail_template.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'pos_settle_customer_account/static/src/css/pos_settle_customer_account.css',
+        ],
+    },
+    'installable': True,
+    'auto_install': False,
+    'license': 'AGPL-3',
+}

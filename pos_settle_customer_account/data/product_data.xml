@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2024 MokaTourisme (https://mokatourisme.fr)
+  @author: Romain Duciel <romain@mokatourisme.fr>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="product_settle_customer_account" model="product.product">
+        <field name="name">Customer Account</field>
+        <field name="available_in_pos">False</field>
+        <field name="standard_price">0.00</field>
+        <field name="list_price">0.00</field>
+        <field name="weight">0.00</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">SETTLE</field>
+        <field name="purchase_ok">False</field>
+        <field name="base_unit_count">0</field>
+    </record>
+
+</odoo>

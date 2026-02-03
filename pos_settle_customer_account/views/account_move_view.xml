@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_move_form_customer_account" model="ir.ui.view">
+        <field name="name">account.move.form.customer.account</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_invoice_sent']" position="after">
+                <button name="action_send_customer_account_invoice"
+                        string="Send Customer Account Invoice"
+                        type="object"
+                        invisible="not pos_order_ids"
+                        class="oe_highlight"
+                        data-hotkey="g"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
