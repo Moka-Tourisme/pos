@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2025 - Moka Tourisme
+     License LGPL-3 - See LICENSE file for full copyright and licensing details. -->
+<odoo>
+
+    <!-- Vue formulaire du wizard -->
+    <record id="view_pos_payment_vat_wizard_form" model="ir.ui.view">
+        <field name="name">pos.payment.vat.wizard.form</field>
+        <field name="model">pos.payment.vat.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Exporter le Rapport TVA par Mode de Paiement">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="pos_config_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="action_print_pdf"
+                        string="Imprimer PDF"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="p"
+                    />
+                    <button
+                        name="action_export_xlsx"
+                        string="Exporter XLSX"
+                        type="object"
+                        class="btn-secondary"
+                        data-hotkey="x"
+                    />
+                    <button string="Annuler" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="action_pos_payment_vat_wizard" model="ir.actions.act_window">
+        <field name="name">Exporter Rapport TVA par Mode de Paiement</field>
+        <field name="res_model">pos.payment.vat.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu sous Rapports POS -->
+    <menuitem
+        id="menu_pos_payment_vat_wizard"
+        name="Export XLSX TVA / Mode de Paiement"
+        parent="point_of_sale.menu_point_rep"
+        action="action_pos_payment_vat_wizard"
+        sequence="8"
+    />
+
+</odoo>

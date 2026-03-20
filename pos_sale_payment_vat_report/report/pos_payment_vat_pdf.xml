@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Déclaration du rapport PDF -->
+    <record id="action_pos_payment_vat_pdf" model="ir.actions.report">
+        <field name="name">Rapport TVA par Mode de Paiement</field>
+        <field name="model">pos.payment.vat.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_sale_payment_vat_report.report_pos_payment_vat</field>
+        <field name="report_file">pos_sale_payment_vat_report.report_pos_payment_vat</field>
+        <field name="print_report_name">'Rapport TVA - Mode de Paiement - %s au %s' % (object.date_from, object.date_to)</field>
+    </record>
+
+    <!-- Template QWeb PDF -->
+    <template id="report_pos_payment_vat">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="data" t-value="wizard._get_pdf_data()"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <!-- En-tête -->
+                        <div class="text-center mb-4">
+                            <h2 style="margin-bottom:4px;">Ventes par Mode de Paiement et Taux de TVA</h2>
+                            <p style="margin:0; font-size:13px;">
+                                Période du <strong><t t-esc="wizard.date_from"/></strong>
+                                au <strong><t t-esc="wizard.date_to"/></strong>
+                            </p>
+                            <t t-if="wizard.pos_config_ids">
+                                <p style="margin:0; font-size:12px; color:#555;">
+                                    Caisse(s) :
+                                    <t t-foreach="wizard.pos_config_ids" t-as="cfg">
+                                        <t t-esc="cfg.name"/><t t-if="not cfg_last">, </t>
+                                    </t>
+                                </p>
+                            </t>
+                        </div>
+
+                        <!-- Une section par mode de paiement -->
+                        <t t-foreach="data['sections']" t-as="section">
+                            <div style="margin-bottom:16px; page-break-inside:avoid; break-inside:avoid;">
+                                <h4 style="
+                                    background-color:#2c6ea6;
+                                    color:white;
+                                    padding:6px 10px;
+                                    margin:0;
+                                    font-size:13px;
+                                    border-radius:3px 3px 0 0;
+                                ">
+                                    <t t-esc="section['pm_name']"/>
+                                </h4>
+                                <table style="
+                                    margin:0;
+                                    font-size:12px;
+                                    border-collapse:collapse;
+                                    width:100%;
+                                ">
+                                    <thead>
+                                        <tr style="background-color:#e8f0f8;">
+                                            <th style="padding:5px 8px; border:1px solid #ccc; width:25%;">Taux de TVA</th>
+                                            <th style="padding:5px 8px; border:1px solid #ccc; text-align:right; width:20%;">CA HT</th>
+                                            <th style="padding:5px 8px; border:1px solid #ccc; text-align:right; width:20%;">TVA collectée</th>
+                                            <th style="padding:5px 8px; border:1px solid #ccc; text-align:right; width:20%;">CA TTC</th>
+                                            <th style="padding:5px 8px; border:1px solid #ccc; text-align:right; width:15%;">Nb commandes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="section['rows']" t-as="row">
+                                            <tr style="page-break-inside:avoid; break-inside:avoid;">
+                                                <td style="padding:4px 8px; border:1px solid #ddd;"><t t-esc="row['tax_label']"/></td>
+                                                <td style="padding:4px 8px; border:1px solid #ddd; text-align:right;"><t t-esc="'%.2f €' % row['ht']"/></td>
+                                                <td style="padding:4px 8px; border:1px solid #ddd; text-align:right;"><t t-esc="'%.2f €' % row['tax']"/></td>
+                                                <td style="padding:4px 8px; border:1px solid #ddd; text-align:right;"><t t-esc="'%.2f €' % row['ttc']"/></td>
+                                                <td style="padding:4px 8px; border:1px solid #ddd; text-align:right;"><t t-esc="row['nb']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background-color:#dce8f5; font-weight:bold; page-break-inside:avoid; break-inside:avoid;">
+                                            <td style="padding:5px 8px; border:1px solid #ccc;">Total</td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="'%.2f €' % section['total_ht']"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="'%.2f €' % section['total_tax']"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="'%.2f €' % section['total_ttc']"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="section['total_nb']"/></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Total général — collé au reste du contenu -->
+                        <div style="margin-top:16px; border-top:2px solid #2c6ea6; padding-top:10px; page-break-inside:avoid; break-inside:avoid; page-break-before:avoid; break-before:avoid;">
+                            <table style="width:100%; font-size:13px; border-collapse:collapse;">
+                                <tr style="background-color:#2c6ea6; color:white; font-weight:bold;">
+                                    <td style="padding:7px 10px; border:1px solid #1a4f80; width:25%;">TOTAL GÉNÉRAL</td>
+                                    <td style="padding:7px 10px; border:1px solid #1a4f80; text-align:right; width:20%;"><t t-esc="'%.2f €' % data['grand_total']['ht']"/></td>
+                                    <td style="padding:7px 10px; border:1px solid #1a4f80; text-align:right; width:20%;"><t t-esc="'%.2f €' % data['grand_total']['tax']"/></td>
+                                    <td style="padding:7px 10px; border:1px solid #1a4f80; text-align:right; width:20%;"><t t-esc="'%.2f €' % data['grand_total']['ttc']"/></td>
+                                    <td style="padding:7px 10px; border:1px solid #1a4f80; text-align:right; width:15%;"><t t-esc="data['grand_total']['nb']"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2025 - Moka Tourisme
+     License LGPL-3 - See LICENSE file for full copyright and licensing details. -->
+<odoo>
+
+    <!-- Vue liste -->
+    <record id="view_pos_payment_vat_report_tree" model="ir.ui.view">
+        <field name="name">pos.payment.vat.report.tree</field>
+        <field name="model">pos.payment.vat.report</field>
+        <field name="arch" type="xml">
+            <tree string="Rapport POS - Mode de Paiement et TVA" create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="pos_config_id"/>
+                <field name="payment_method_id"/>
+                <field name="tax_id"/>
+                <field name="tax_rate" string="Taux TVA (%)"/>
+                <field name="nb_orders"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="amount_total_ttc" sum="Total TTC"/>
+                <field name="amount_tax" sum="Total TVA"/>
+                <field name="amount_total_ht" sum="Total HT"/>
+                <button name="action_open_orders" type="object"
+                        string="Voir commandes" icon="fa-list"
+                        title="Voir les commandes POS de cette ligne"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue pivot -->
+    <record id="view_pos_payment_vat_report_pivot" model="ir.ui.view">
+        <field name="name">pos.payment.vat.report.pivot</field>
+        <field name="model">pos.payment.vat.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Rapport POS - Mode de Paiement et TVA">
+                <field name="payment_method_id" type="col"/>
+                <field name="tax_id" type="row"/>
+                <field name="amount_tax" type="measure"/>
+                <field name="amount_total_ttc" type="measure"/>
+                <field name="amount_total_ht" type="measure"/>
+                <field name="nb_orders" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue graphique -->
+    <record id="view_pos_payment_vat_report_graph" model="ir.ui.view">
+        <field name="name">pos.payment.vat.report.graph</field>
+        <field name="model">pos.payment.vat.report</field>
+        <field name="arch" type="xml">
+            <graph string="Rapport POS - Mode de Paiement et TVA" type="bar">
+                <field name="payment_method_id" type="row"/>
+                <field name="amount_total_ttc" type="measure"/>
+                <field name="amount_tax" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_pos_payment_vat_report_search" model="ir.ui.view">
+        <field name="name">pos.payment.vat.report.search</field>
+        <field name="model">pos.payment.vat.report</field>
+        <field name="arch" type="xml">
+            <search string="Recherche Rapport POS TVA">
+                <field name="payment_method_id"/>
+                <field name="tax_id"/>
+                <field name="pos_config_id"/>
+                <field name="year"/>
+                <!-- Filtres rapides par mois -->
+                <filter string="Janvier"   name="month_01" domain="[('month', '=', '1')]"/>
+                <filter string="Février"   name="month_02" domain="[('month', '=', '2')]"/>
+                <filter string="Mars"      name="month_03" domain="[('month', '=', '3')]"/>
+                <filter string="Avril"     name="month_04" domain="[('month', '=', '4')]"/>
+                <filter string="Mai"       name="month_05" domain="[('month', '=', '5')]"/>
+                <filter string="Juin"      name="month_06" domain="[('month', '=', '6')]"/>
+                <filter string="Juillet"   name="month_07" domain="[('month', '=', '7')]"/>
+                <filter string="Août"      name="month_08" domain="[('month', '=', '8')]"/>
+                <filter string="Septembre" name="month_09" domain="[('month', '=', '9')]"/>
+                <filter string="Octobre"   name="month_10" domain="[('month', '=', '10')]"/>
+                <filter string="Novembre"  name="month_11" domain="[('month', '=', '11')]"/>
+                <filter string="Décembre"  name="month_12" domain="[('month', '=', '12')]"/>
+                <separator/>
+                <!-- Filtres par année courante -->
+                <filter
+                    string="Cette année"
+                    name="current_year"
+                    domain="[('year', '=', context_today().year)]"
+                />
+                <filter
+                    string="Année précédente"
+                    name="last_year"
+                    domain="[('year', '=', context_today().year - 1)]"
+                />
+                <separator/>
+                <!-- Groupements -->
+                <group expand="0" string="Regrouper par">
+                    <filter string="Mode de Paiement" name="group_payment_method" context="{'group_by': 'payment_method_id'}"/>
+                    <filter string="Taxe" name="group_tax" context="{'group_by': 'tax_id'}"/>
+                    <filter string="Point de Vente" name="group_pos_config" context="{'group_by': 'pos_config_id'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                    <filter string="Mois" name="group_month" context="{'group_by': 'month'}"/>
+                    <filter string="Année" name="group_year" context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action window -->
+    <record id="action_pos_payment_vat_report" model="ir.actions.act_window">
+        <field name="name">Rapport TVA par Mode de Paiement</field>
+        <field name="res_model">pos.payment.vat.report</field>
+        <field name="view_mode">pivot,tree,graph</field>
+        <field name="search_view_id" ref="view_pos_payment_vat_report_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune donnée disponible.
+            </p>
+            <p>
+                Ce rapport affiche la ventilation proportionnelle du CA et de la TVA
+                collectée par mode de paiement et par taux de TVA.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu sous Rapports POS -->
+    <menuitem
+        id="menu_pos_payment_vat_report"
+        name="Rapport TVA par Mode de Paiement"
+        parent="point_of_sale.menu_point_rep"
+        action="action_pos_payment_vat_report"
+        sequence="7"
+    />
+
+</odoo>
