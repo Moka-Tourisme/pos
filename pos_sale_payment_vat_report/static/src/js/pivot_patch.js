@@ -14,8 +14,10 @@ patch(PivotController.prototype, "pos_sale_payment_vat_report.pivot_open_orders"
             return this._super(...arguments);
         }
 
+        const orm = this.model.orm;
+
         // Récupère les IDs des lignes du rapport correspondant au domaine cliqué
-        const recordIds = await this.orm.search(
+        const recordIds = await orm.search(
             "pos.payment.vat.report",
             domain,
             { limit: 0 }
@@ -25,7 +27,7 @@ patch(PivotController.prototype, "pos_sale_payment_vat_report.pivot_open_orders"
         }
 
         // Appelle la méthode Python qui construit le domaine pos.order et retourne l'action
-        const action = await this.orm.call(
+        const action = await orm.call(
             "pos.payment.vat.report",
             "action_open_orders_multi",
             [recordIds]
