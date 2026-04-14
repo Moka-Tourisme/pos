@@ -116,6 +116,7 @@ class PosPaymentVatReport(models.Model):
             'name': title,
             'res_model': 'pos.order',
             'view_mode': 'tree,form',
+            'views': [(False, 'list'), (False, 'form')],
             'domain': [('id', 'in', order_ids)],
             'target': 'current',
         }
