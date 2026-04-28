@@ -80,29 +80,57 @@ class PosPaymentVatReport(models.Model):
         if not self:
             return {}
 
-        # Construction dynamique : une clause par ligne, reliées par OR
-        conditions = []
-        params = []
-        for rec in self:
-            conditions.append(
-                "(DATE(po.date_order AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris') = %s"
-                " AND p.payment_method_id = %s"
-                " AND rel.account_tax_id = %s"
-                " AND ps.config_id = %s)"
-            )
-            params.extend([rec.date, rec.payment_method_id.id, rec.tax_id.id, rec.pos_config_id.id])
+        order_ids = []
 
-        self.env.cr.execute("""
-            SELECT DISTINCT po.id
-            FROM pos_order po
-            JOIN pos_session ps ON ps.id = po.session_id
-            JOIN pos_order_line pol ON pol.order_id = po.id
-            JOIN account_tax_pos_order_line_rel rel ON rel.pos_order_line_id = pol.id
-            JOIN pos_payment p ON p.pos_order_id = po.id
-            WHERE po.state IN ('paid', 'done', 'invoiced')
-              AND ({})
-        """.format(" OR ".join(conditions)), params)
-        order_ids = [row[0] for row in self.env.cr.fetchall()]
+        # Lignes avec taxe : ventilation proportionnelle via order_line
+        recs_with_tax = self.filtered(lambda r: r.tax_id)
+        if recs_with_tax:
+            conditions = []
+            params = []
+            for rec in recs_with_tax:
+                conditions.append(
+                    "(DATE(po.date_order AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris') = %s"
+                    " AND p.payment_method_id = %s"
+                    " AND rel.account_tax_id = %s"
+                    " AND ps.config_id = %s)"
+                )
+                params.extend([rec.date, rec.payment_method_id.id, rec.tax_id.id, rec.pos_config_id.id])
+            self.env.cr.execute("""
+                SELECT DISTINCT po.id
+                FROM pos_order po
+                JOIN pos_session ps ON ps.id = po.session_id
+                JOIN pos_order_line pol ON pol.order_id = po.id
+                JOIN account_tax_pos_order_line_rel rel ON rel.pos_order_line_id = pol.id
+                JOIN pos_payment p ON p.pos_order_id = po.id
+                WHERE po.state IN ('paid', 'done', 'invoiced')
+                  AND ({})
+            """.format(" OR ".join(conditions)), params)
+            order_ids += [row[0] for row in self.env.cr.fetchall()]
+
+        # Lignes sans taxe : corrections de paiement sans lignes produit
+        recs_without_tax = self.filtered(lambda r: not r.tax_id)
+        if recs_without_tax:
+            conditions = []
+            params = []
+            for rec in recs_without_tax:
+                conditions.append(
+                    "(DATE(po.date_order AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris') = %s"
+                    " AND p.payment_method_id = %s"
+                    " AND ps.config_id = %s)"
+                )
+                params.extend([rec.date, rec.payment_method_id.id, rec.pos_config_id.id])
+            self.env.cr.execute("""
+                SELECT DISTINCT po.id
+                FROM pos_order po
+                JOIN pos_session ps ON ps.id = po.session_id
+                JOIN pos_payment p ON p.pos_order_id = po.id
+                WHERE po.state IN ('paid', 'done', 'invoiced')
+                  AND NOT EXISTS (
+                      SELECT 1 FROM pos_order_line pol WHERE pol.order_id = po.id
+                  )
+                  AND ({})
+            """.format(" OR ".join(conditions)), params)
+            order_ids += [row[0] for row in self.env.cr.fetchall()]
 
         if len(self) == 1:
             title = "Commandes — %s / %s / %s" % (
