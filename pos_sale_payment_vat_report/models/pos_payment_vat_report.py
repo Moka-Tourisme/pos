@@ -100,7 +100,6 @@ class PosPaymentVatReport(models.Model):
             JOIN account_tax_pos_order_line_rel rel ON rel.pos_order_line_id = pol.id
             JOIN pos_payment p ON p.pos_order_id = po.id
             WHERE po.state IN ('paid', 'done', 'invoiced')
-              AND po.amount_total > 0
               AND ({})
         """.format(" OR ".join(conditions)), params)
         order_ids = [row[0] for row in self.env.cr.fetchall()]
@@ -134,78 +133,130 @@ class PosPaymentVatReport(models.Model):
             CREATE OR REPLACE VIEW pos_payment_vat_report AS (
                 SELECT
                     ROW_NUMBER() OVER (
-                        ORDER BY
-                            DATE(po.date_order AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Paris'),
-                            pm.id,
-                            t.id
+                        ORDER BY date, payment_method_id, COALESCE(tax_id, 0)
                     ) AS id,
-                    DATE(
-                        po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    ) AS date,
-                    EXTRACT(
-                        MONTH FROM po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    )::text AS month,
-                    EXTRACT(
-                        YEAR FROM po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    )::integer AS year,
-                    ps.config_id AS pos_config_id,
-                    pm.id AS payment_method_id,
-                    t.id AS tax_id,
-                    t.amount AS tax_rate,
-                    COUNT(DISTINCT po.id) AS nb_orders,
-                    ROUND(
-                        SUM(
-                            pol.price_subtotal_incl
-                            * p.amount
-                            / NULLIF(po.amount_total, 0)
-                        )::numeric,
-                        2
-                    ) AS amount_total_ttc,
-                    ROUND(
-                        SUM(
-                            pol.price_subtotal
-                            * p.amount
-                            / NULLIF(po.amount_total, 0)
-                        )::numeric,
-                        2
-                    ) AS amount_total_ht,
-                    ROUND(
-                        SUM(
-                            (pol.price_subtotal_incl - pol.price_subtotal)
-                            * p.amount
-                            / NULLIF(po.amount_total, 0)
-                        )::numeric,
-                        2
-                    ) AS amount_tax
-                FROM pos_order po
-                JOIN pos_session ps ON ps.id = po.session_id
-                JOIN pos_order_line pol ON pol.order_id = po.id
-                JOIN account_tax_pos_order_line_rel rel
-                    ON rel.pos_order_line_id = pol.id
-                JOIN account_tax t ON t.id = rel.account_tax_id
-                JOIN pos_payment p ON p.pos_order_id = po.id
-                JOIN pos_payment_method pm ON pm.id = p.payment_method_id
-                WHERE po.state IN ('paid', 'done', 'invoiced')
-                  AND po.amount_total > 0
-                GROUP BY
-                    DATE(
-                        po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    ),
-                    EXTRACT(
-                        MONTH FROM po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    ),
-                    EXTRACT(
-                        YEAR FROM po.date_order AT TIME ZONE 'UTC'
-                        AT TIME ZONE 'Europe/Paris'
-                    ),
-                    ps.config_id,
-                    pm.id,
-                    t.id,
-                    t.amount
+                    date, month, year, pos_config_id, payment_method_id,
+                    tax_id, tax_rate, nb_orders,
+                    amount_total_ttc, amount_total_ht, amount_tax
+                FROM (
+                    -- Commandes normales avec lignes produit
+                    SELECT
+                        DATE(
+                            po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ) AS date,
+                        EXTRACT(
+                            MONTH FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        )::text AS month,
+                        EXTRACT(
+                            YEAR FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        )::integer AS year,
+                        ps.config_id AS pos_config_id,
+                        pm.id AS payment_method_id,
+                        t.id AS tax_id,
+                        t.amount AS tax_rate,
+                        COUNT(DISTINCT po.id) AS nb_orders,
+                        ROUND(
+                            SUM(
+                                pol.price_subtotal_incl
+                                * p.amount
+                                / NULLIF(po.amount_total, 0)
+                            )::numeric,
+                            2
+                        ) AS amount_total_ttc,
+                        ROUND(
+                            SUM(
+                                pol.price_subtotal
+                                * p.amount
+                                / NULLIF(po.amount_total, 0)
+                            )::numeric,
+                            2
+                        ) AS amount_total_ht,
+                        ROUND(
+                            SUM(
+                                (pol.price_subtotal_incl - pol.price_subtotal)
+                                * p.amount
+                                / NULLIF(po.amount_total, 0)
+                            )::numeric,
+                            2
+                        ) AS amount_tax
+                    FROM pos_order po
+                    JOIN pos_session ps ON ps.id = po.session_id
+                    JOIN pos_order_line pol ON pol.order_id = po.id
+                    JOIN account_tax_pos_order_line_rel rel
+                        ON rel.pos_order_line_id = pol.id
+                    JOIN account_tax t ON t.id = rel.account_tax_id
+                    JOIN pos_payment p ON p.pos_order_id = po.id
+                    JOIN pos_payment_method pm ON pm.id = p.payment_method_id
+                    WHERE po.state IN ('paid', 'done', 'invoiced')
+                    GROUP BY
+                        DATE(
+                            po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        EXTRACT(
+                            MONTH FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        EXTRACT(
+                            YEAR FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        ps.config_id,
+                        pm.id,
+                        t.id,
+                        t.amount
+
+                    UNION ALL
+
+                    -- Corrections de paiement sans lignes produit
+                    SELECT
+                        DATE(
+                            po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ) AS date,
+                        EXTRACT(
+                            MONTH FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        )::text AS month,
+                        EXTRACT(
+                            YEAR FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        )::integer AS year,
+                        ps.config_id AS pos_config_id,
+                        pm.id AS payment_method_id,
+                        NULL::integer AS tax_id,
+                        0.0 AS tax_rate,
+                        COUNT(DISTINCT po.id) AS nb_orders,
+                        ROUND(SUM(p.amount)::numeric, 2) AS amount_total_ttc,
+                        ROUND(SUM(p.amount)::numeric, 2) AS amount_total_ht,
+                        0.0 AS amount_tax
+                    FROM pos_order po
+                    JOIN pos_session ps ON ps.id = po.session_id
+                    JOIN pos_payment p ON p.pos_order_id = po.id
+                    JOIN pos_payment_method pm ON pm.id = p.payment_method_id
+                    WHERE po.state IN ('paid', 'done', 'invoiced')
+                      AND NOT EXISTS (
+                          SELECT 1 FROM pos_order_line pol
+                          WHERE pol.order_id = po.id
+                      )
+                    GROUP BY
+                        DATE(
+                            po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        EXTRACT(
+                            MONTH FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        EXTRACT(
+                            YEAR FROM po.date_order AT TIME ZONE 'UTC'
+                            AT TIME ZONE 'Europe/Paris'
+                        ),
+                        ps.config_id,
+                        pm.id
+                ) base
             )
         """)
