@@ -15,7 +15,12 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Make the test compatible with pos_minimize_menu
         if "iface_important_buttons" in self.main_pos_config._fields:
-            self.main_pos_config.iface_important_buttons = "CreateOrderButton"
+            self.main_pos_config.iface_important_buttons = ",".join(
+                [
+                    "CreateOrderButton",
+                    "OrderlineCustomerNoteButton",
+                ]
+            )
 
         before_orders = self.env["sale.order"].search(
             [("partner_id", "=", self.env.ref("base.res_partner_address_31").id)],
@@ -56,4 +61,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             "Product Note",
             order.order_line[1].name,
             "'Product Note' must not contains in sale order line description",
+        )
+        self.assertTrue(
+            order.commitment_date,
+        )
+        self.assertEqual(
+            order.commitment_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "2024-01-01 16:00:00",
         )

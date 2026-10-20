@@ -16,13 +16,13 @@ odoo.define("pos_product_multi_barcode.db", function (require) {
             var res = this._super(products);
             var self = this;
 
-            if (!products instanceof Array) {
-                products = [products];
-            }
             products.forEach(function (product) {
                 var barcodes = JSON.parse(product.barcodes_json);
 
                 barcodes.forEach(function (barcode) {
+                    if (barcode in self.product_by_barcode) {
+                        return;
+                    }
                     self.product_by_barcode[barcode] = product;
                 });
             });

@@ -1,4 +1,4 @@
-* Go to Point of Sale > Configuration > Point of Sale
+* Go to Point of Sale > Configuration > Settings 
 * Edit your point of sale, and select a value for the field
   'Payment Change Policy'.
 
@@ -10,7 +10,7 @@ Two options are available:
 
 * 'Update Payments': Odoo will change payment lines.
 
-.. figure:: ../static/description/pos_config_form.png
+.. figure:: ../static/description/res_config_settings_form.png
 
 
 **Note**

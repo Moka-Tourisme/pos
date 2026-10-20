@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t
+        t-name="OrderLinesReceipt"
+        t-inherit="point_of_sale.OrderLinesReceipt"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//t[@t-if='line.discount !== 0']" position="after">
+            <t t-if="line.has_tare">
+                <div class="pos-receipt-left-padding">
+                    Gross Weight:
+                    <t t-out="line.gross_weight_str" />
+                    <br />
+                    Tare:
+                    <t t-out="line.tare_str" />
+                    <br />
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
