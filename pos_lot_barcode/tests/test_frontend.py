@@ -10,7 +10,8 @@ class TestLotScanning(TestPointOfSaleHttpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        # TODO: Delete if merged https://github.com/odoo/odoo/pull/240587
+        cls.pos_user.groups_id += cls.env.ref("base.group_system")
         cls.lot_product_1 = cls.env["product.product"].create(
             {
                 "name": "Lot Product 1",
